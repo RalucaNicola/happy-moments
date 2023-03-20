@@ -1,0 +1,93 @@
+:root {
+  --main-color: rgba(235 42 97 / 1);
+  --achievement-color: #bd7ebe;
+  --affection-color: #ffb55a;
+  --nature-color: #6ca676;
+  --bonding-color: #fd7f6f;
+  --exercise-color: #65a9de;
+  --enjoy-color: #b2e061;
+  --leisure-color: #beb9db;
+}
+
+html,
+body,
+#view,
+.background,
+.intro {
+  padding: 0;
+  margin: 0;
+  height: 100%;
+  width: 100%;
+  font-family: "Avenir Next", "Avenir", "Helvetica Neue", sans-serif;
+}
+
+.background {
+  position: fixed;
+  background-image: url("../assets/background.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  z-index: -1;
+}
+
+a {
+  text-decoration: none;
+  border-bottom: 3px dotted var(--main-color);
+  color: #151515;
+  transition: color 500ms;
+}
+
+a:hover {
+  color: var(--main-color);
+}
+
+.intro {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.5) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  .intro-content {
+    max-width: min(700px, 80%);
+    p {
+      line-height: 1.7rem;
+      span {
+        padding: 2px 4px;
+        border-radius: 5px;
+        color: white;
+        font-weight: bold;
+      }
+    }
+  }
+  h1 {
+    color: var(--main-color);
+    font-family: "Montserrat", sans-serif;
+    font-size: 3rem;
+  }
+  .achievement {
+    background: var(--achievement-color);
+  }
+  .affection {
+    background: var(--affection-color);
+  }
+  .enjoy {
+    background: var(--enjoy-color);
+  }
+  .bonding {
+    background: var(--bonding-color);
+  }
+  .leisure {
+    background: var(--leisure-color);
+  }
+  .nature {
+    background: var(--nature-color);
+  }
+  .exercise {
+    background: var(--exercise-color);
+  }
+}
+
+#view {
+  z-index: 1;
+  background-color: rgba(255 255 255 / 0.5);
+}
