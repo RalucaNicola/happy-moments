@@ -41,49 +41,77 @@ a:hover {
   color: var(--main-color);
 }
 
+@keyframes moveTopDown {
+  from {
+    transform: translateY(0%);
+  }
+
+  to {
+    transform: translateY(50%);
+  }
+}
+
 .intro {
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.5) 100%);
   display: flex;
   align-items: center;
   justify-content: center;
   text-align: center;
+  position: relative;
+
   .intro-content {
     max-width: min(700px, 80%);
+    font-size: 0.9rem;
     p {
       line-height: 1.7rem;
       span {
-        padding: 2px 4px;
-        border-radius: 5px;
-        color: white;
-        font-weight: bold;
+        border-bottom-width: 4px;
+        border-bottom-style: solid;
       }
     }
   }
   h1 {
-    color: var(--main-color);
+    color: white;
     font-family: "Montserrat", sans-serif;
     font-size: 3rem;
+    text-shadow: 5px 2px 0px orange;
   }
   .achievement {
-    background: var(--achievement-color);
+    border-bottom-color: var(--achievement-color);
   }
   .affection {
-    background: var(--affection-color);
+    border-bottom-color: var(--affection-color);
   }
   .enjoy {
-    background: var(--enjoy-color);
+    border-bottom-color: var(--enjoy-color);
   }
   .bonding {
-    background: var(--bonding-color);
+    border-bottom-color: var(--bonding-color);
   }
   .leisure {
-    background: var(--leisure-color);
+    border-bottom-color: var(--leisure-color);
   }
   .nature {
-    background: var(--nature-color);
+    border-bottom-color: var(--nature-color);
   }
   .exercise {
-    background: var(--exercise-color);
+    border-bottom-color: var(--exercise-color);
+  }
+  .scroll-down {
+    color: rgba(0, 0, 0, 0.5);
+    font-size: 0.9rem;
+    position: absolute;
+    bottom: 30px;
+    .down-arrow {
+      height: 25px;
+      margin-top: 10px;
+      img {
+        height: 100%;
+        filter: brightness(0.3);
+        opacity: 0.4;
+        animation: 3s infinite alternate moveTopDown;
+      }
+    }
   }
 }
 
