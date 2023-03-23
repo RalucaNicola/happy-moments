@@ -17,7 +17,7 @@ const map = new WebScene({
   }
 });
 
-const view = new SceneView({
+const view = (window["view"] = new SceneView({
   container: "view",
   map,
   alphaCompositingEnabled: true,
@@ -39,6 +39,6 @@ const view = new SceneView({
     mouseWheelZoomEnabled: false,
     browserTouchPanEnabled: false
   }
-});
-const store = new AppStore();
+}));
+const store = new AppStore({ view });
 new App({ container: document.getElementById("ui"), store });

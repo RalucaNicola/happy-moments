@@ -1,20 +1,25 @@
 import Accessor from "@arcgis/core/core/Accessor";
 import { property, subclass } from "@arcgis/core/core/accessorSupport/decorators";
 import { watch } from "@arcgis/core/core/reactiveUtils";
+import FeatureLayer from "@arcgis/core/layers/FeatureLayer";
 import * as query from "@arcgis/core/rest/query";
 import Query from "@arcgis/core/rest/support/Query";
+import SceneView from "@arcgis/core/views/SceneView";
 import { categoryKeys, tableURL } from "../data";
-import { CachedStatistic, Statistics, TimePeriod } from "../interfaces";
+import { CachedStatistic, Country, Statistics, TimePeriod } from "../interfaces";
 
 @subclass("happy-moments.AppStore")
 class AppStore extends Accessor {
-  constructor() {
+  constructor({ view }: { view: SceneView }) {
     super();
     this.timePeriod = TimePeriod.Day;
+    this.country = null;
+    this._view = view;
 
     this.addHandles([
+      // whenever time period changes or a country is selected => get the new statistics
       watch(
-        () => this.timePeriod,
+        () => [this.timePeriod, this.country],
         () => {
           this._loadStatistics();
         },
@@ -23,17 +28,24 @@ class AppStore extends Accessor {
         }
       )
     ]);
+
+    view.when(() => {
+      const layer = this._view.map.findLayerById("187000ea9b6-layer-99") as FeatureLayer;
+      layer.outFields = ["iso_a3", "Name"];
+      this.addHandles([this._setupClickHitTest(layer)]);
+    });
   }
   @property()
   timePeriod: TimePeriod;
 
   @property()
-  country: string | null = null;
+  country: Country | null;
 
   @property()
   statistics: Statistics | null = null;
 
   private _cachedStatistics: Array<CachedStatistic> = [];
+  private _view: SceneView;
 
   toggleTimePeriod(): void {
     this.timePeriod = this.timePeriod === TimePeriod.Day ? TimePeriod.Month : TimePeriod.Day;
@@ -41,7 +53,7 @@ class AppStore extends Accessor {
 
   private async _loadStatistics() {
     const cachedStatistic = this._cachedStatistics.find(
-      (element) => element.country === this.country && element.timePeriod === this.timePeriod
+      (element) => element.country === this.country.isoId && element.timePeriod === this.timePeriod
     );
 
     if (cachedStatistic) {
@@ -53,7 +65,7 @@ class AppStore extends Accessor {
         const queryResults = await query.executeQueryJSON(
           queryURL,
           new Query({
-            where: "1=1",
+            where: this.country ? `country = '${this.country.isoId}'` : "1=1",
             outStatistics: [
               {
                 onStatisticField: "hmid",
@@ -75,16 +87,37 @@ class AppStore extends Accessor {
           element.text = categoryKeys[element.category];
         });
 
-        this.statistics = data;
-        this._cachedStatistics.push({
-          country: this.country,
-          timePeriod: this.timePeriod,
+        const statistics = {
+          country: this.country ? this.country.name : null,
           data
+        };
+        this._cachedStatistics.push({
+          country: this.country ? this.country.isoId : null,
+          timePeriod: this.timePeriod,
+          data: statistics
         });
+        this.statistics = statistics;
       } catch (error) {
         console.log(error);
       }
     }
+  }
+
+  private _setupClickHitTest(layer: FeatureLayer): IHandle {
+    return this._view.on("click", (event) => {
+      this._view.hitTest(event, { include: layer }).then((response) => {
+        if (response.results.length) {
+          const result = response.results[0];
+          if (result?.type === "graphic") {
+            const { iso_a3, Name } = result.graphic.attributes;
+            this.country = {
+              isoId: iso_a3,
+              name: Name
+            };
+          }
+        }
+      });
+    });
   }
 }
 

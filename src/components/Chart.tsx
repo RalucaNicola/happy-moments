@@ -2,7 +2,8 @@ import "./Chart.scss";
 import { property, subclass } from "@arcgis/core/core/accessorSupport/decorators";
 import Widget from "./Widget";
 import { tsx } from "@arcgis/core/widgets/support/widget";
-import { Statistics } from "../interfaces";
+import { Country, Statistics } from "../interfaces";
+import { formatNumber } from "../utils";
 
 type ConstructProperties = Pick<Chart, "statistics">;
 
@@ -21,25 +22,49 @@ class Chart extends Widget<ConstructProperties> {
   }
 
   private _renderDescription(): tsx.JSX.Element {
-    const [c1, c2, c3, c4, c5, c6, c7] = this.statistics;
+    const country = this.statistics.country;
+    console.log(this.statistics);
     return (
       <p class="description">
-        Most happy moments are related to <span class={c1.category}>{c1.text}</span> (
-        {c1.percentage}%) and <span class={c2.category}>{c2.text}</span> ({c2.percentage}%). Some
-        sentences were about <span class={c3.category}>{c3.text}</span> ({c3.percentage}%),{" "}
-        <span class={c4.category}>{c4.text}</span> ({c4.percentage}%),{" "}
-        <span class={c5.category}>{c5.text}</span> ({c5.percentage}%),{" "}
-        <span class={c6.category}>{c6.text}</span> ({c6.percentage}%) and{" "}
-        <span class={c7.category}>{c7.text}</span> ({c7.percentage}%).
+        {country
+          ? `In ${country} happy moments are related to `
+          : "Around the world, happy moments are related to "}
+        {this.statistics.data.map((element, index) => (
+          <span key={index}>
+            <span class={this.classes(element.category, "underline")}>{element.text}</span> (
+            {formatNumber(element.counts)})
+            {this._setPunctuation(index, this.statistics.data.length)}
+          </span>
+        ))}
       </p>
     );
+  }
+
+  private _setPunctuation(index: number, length: number) {
+    if (length === 1) {
+      return ".";
+    } else {
+      if (index === length - 2) {
+        return " and ";
+      } else {
+        if (index === length - 1) {
+          return ".";
+        } else {
+          return ", ";
+        }
+      }
+    }
   }
 
   private _renderChart(): tsx.JSX.Element {
     return (
       <div class="chart">
-        {this.statistics.map((element) => (
-          <button class={element.category} styles={{ width: `${element.percentage}%` }}></button>
+        {this.statistics.data.map((element, index) => (
+          <button
+            key={index}
+            class={element.category}
+            styles={{ width: `${element.percentage}%` }}
+          ></button>
         ))}
       </div>
     );

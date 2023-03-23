@@ -44,6 +44,10 @@
 }
 
 .description {
+  .underline {
+    border-bottom-width: 4px;
+    border-bottom-style: solid;
+  }
   .achievement {
     border-bottom-color: var(--achievement-color);
   }

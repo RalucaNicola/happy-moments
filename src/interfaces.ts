@@ -3,6 +3,11 @@ export enum TimePeriod {
   Month
 }
 
+export type Country = {
+  name: string;
+  isoId: string;
+} | null;
+
 enum Category {
   achievement,
   affection,
@@ -21,9 +26,12 @@ type CategoryStatistics = {
 };
 
 export type CachedStatistic = {
-  country: string;
+  country: string | null;
   timePeriod: TimePeriod | null;
   data: Statistics;
 };
 
-export type Statistics = Array<CategoryStatistics>;
+export type Statistics = {
+  country: string;
+  data: Array<CategoryStatistics>;
+};
