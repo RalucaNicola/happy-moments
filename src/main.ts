@@ -4,13 +4,16 @@ import "@arcgis/core/assets/esri/themes/light/main.css";
 import esriConfig from "@arcgis/core/config";
 import WebScene from "@arcgis/core/WebScene";
 import SceneView from "@arcgis/core/views/SceneView";
+import App from "./components/App";
+import AppStore from "./stores/AppStore";
+import { websceneId } from "./data";
 
 setAssetPath(window.document.URL);
 esriConfig.assetsPath = "./assets";
 
 const map = new WebScene({
   portalItem: {
-    id: "4c0daae2965d4c2e859dfa398f27d3da"
+    id: websceneId
   }
 });
 
@@ -37,3 +40,5 @@ const view = new SceneView({
     browserTouchPanEnabled: false
   }
 });
+const store = new AppStore();
+new App({ container: document.getElementById("ui"), store });

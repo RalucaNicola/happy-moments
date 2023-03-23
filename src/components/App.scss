@@ -1,0 +1,25 @@
+.ui-layout {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 10px;
+  margin: 0;
+  height: 100%;
+  width: 100%;
+  box-sizing: border-box;
+  header {
+    pointer-events: auto;
+    button {
+      padding: 5px 5px 0 5px;
+      margin-right: 1px;
+      transition: background-color 500ms;
+      font-weight: bold;
+      &.focused {
+        background-color: var(--main-color);
+      }
+      &:hover {
+        background-color: var(--main-color);
+      }
+    }
+  }
+}

@@ -1,5 +1,5 @@
 :root {
-  --main-color: rgba(235 42 97 / 1);
+  --main-color: rgba(255 173 51 / 1);
   --achievement-color: #bd7ebe;
   --affection-color: #ffb55a;
   --nature-color: #6ca676;
@@ -11,6 +11,7 @@
 
 html,
 body,
+.map,
 #view,
 .background,
 .intro {
@@ -33,7 +34,7 @@ body,
 a {
   text-decoration: none;
   border-bottom: 3px dotted var(--main-color);
-  color: #151515;
+  color: inherit;
   transition: color 500ms;
 }
 
@@ -59,47 +60,18 @@ a:hover {
   text-align: center;
   position: relative;
 
-  .intro-content {
-    max-width: min(700px, 80%);
-    font-size: 0.9rem;
-    p {
-      line-height: 1.7rem;
-      span {
-        border-bottom-width: 4px;
-        border-bottom-style: solid;
-      }
-    }
-  }
   h1 {
     color: white;
     font-family: "Montserrat", sans-serif;
     font-size: 3rem;
-    text-shadow: 5px 2px 0px orange;
+    text-shadow: 5px 2px 0px var(--main-color);
   }
-  .achievement {
-    border-bottom-color: var(--achievement-color);
-  }
-  .affection {
-    border-bottom-color: var(--affection-color);
-  }
-  .enjoy {
-    border-bottom-color: var(--enjoy-color);
-  }
-  .bonding {
-    border-bottom-color: var(--bonding-color);
-  }
-  .leisure {
-    border-bottom-color: var(--leisure-color);
-  }
-  .nature {
-    border-bottom-color: var(--nature-color);
-  }
-  .exercise {
-    border-bottom-color: var(--exercise-color);
-  }
+
   .scroll-down {
-    color: rgba(0, 0, 0, 0.5);
+    max-width: min(700px, 80%);
+    color: rgba(0, 0, 0, 0.7);
     font-size: 0.9rem;
+    line-height: 1.7rem;
     position: absolute;
     bottom: 30px;
     .down-arrow {
@@ -107,7 +79,7 @@ a:hover {
       margin-top: 10px;
       img {
         height: 100%;
-        filter: brightness(0.3);
+        filter: brightness(0.1);
         opacity: 0.4;
         animation: 3s infinite alternate moveTopDown;
       }
@@ -115,7 +87,68 @@ a:hover {
   }
 }
 
+.map {
+  position: relative;
+}
+
+#view,
+#ui {
+  position: absolute;
+}
+
+#ui {
+  z-index: 2;
+  pointer-events: none;
+}
+
 #view {
   z-index: 1;
   background-color: rgba(255 255 255 / 0.5);
+}
+
+.intro-content {
+  width: min(700px, 80%);
+}
+
+#ui {
+  font-size: 0.9rem;
+  p {
+    line-height: 1.7rem;
+    span {
+      border-bottom-width: 4px;
+      border-bottom-style: solid;
+    }
+  }
+  .description {
+    .achievement {
+      border-bottom-color: var(--achievement-color);
+    }
+    .affection {
+      border-bottom-color: var(--affection-color);
+    }
+    .enjoy {
+      border-bottom-color: var(--enjoy-color);
+    }
+    .bonding {
+      border-bottom-color: var(--bonding-color);
+    }
+    .leisure {
+      border-bottom-color: var(--leisure-color);
+    }
+    .nature {
+      border-bottom-color: var(--nature-color);
+    }
+    .exercise {
+      border-bottom-color: var(--exercise-color);
+    }
+  }
+}
+
+button {
+  border: none;
+  background-color: transparent;
+  font-family: "Avenir Next", "Avenir", "Helvetica Neue", sans-serif;
+  &:hover {
+    cursor: pointer;
+  }
 }
