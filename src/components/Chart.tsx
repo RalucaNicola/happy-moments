@@ -2,28 +2,26 @@ import "./Chart.scss";
 import { property, subclass } from "@arcgis/core/core/accessorSupport/decorators";
 import Widget from "./Widget";
 import { tsx } from "@arcgis/core/widgets/support/widget";
-import { PeriodStatistics, Statistics } from "../interfaces";
+import { Statistics } from "../interfaces";
 
 type ConstructProperties = Pick<Chart, "statistics">;
 
 @subclass("happy-moments.Chart")
 class Chart extends Widget<ConstructProperties> {
   @property()
-  statistics: PeriodStatistics;
+  statistics: Statistics;
 
   render() {
-    const hasData = this.statistics && this.statistics.data;
-    console.log("chart rendered", this.statistics);
     return (
       <div class="chart-container">
-        {hasData ? this._renderDescription() : "Loading thoughts..."}
-        {hasData ? this._renderChart() : ""}
+        {this.statistics ? this._renderDescription() : "Loading thoughts..."}
+        {this.statistics ? this._renderChart() : ""}
       </div>
     );
   }
 
   private _renderDescription(): tsx.JSX.Element {
-    const [c1, c2, c3, c4, c5, c6, c7] = this.statistics.data;
+    const [c1, c2, c3, c4, c5, c6, c7] = this.statistics;
     return (
       <p class="description">
         Most happy moments are related to <span class={c1.category}>{c1.text}</span> (
@@ -40,7 +38,7 @@ class Chart extends Widget<ConstructProperties> {
   private _renderChart(): tsx.JSX.Element {
     return (
       <div class="chart">
-        {this.statistics.data.map((element) => (
+        {this.statistics.map((element) => (
           <button class={element.category} styles={{ width: `${element.percentage}%` }}></button>
         ))}
       </div>

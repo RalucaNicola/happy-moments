@@ -20,12 +20,10 @@ type CategoryStatistics = {
   text?: number;
 };
 
-export type PeriodStatistics = {
-  updated: boolean;
-  data: Array<CategoryStatistics>;
+export type CachedStatistic = {
+  country: string;
+  timePeriod: TimePeriod | null;
+  data: Statistics;
 };
 
-export type Statistics = {
-  dayPeriod: PeriodStatistics;
-  monthPeriod: PeriodStatistics;
-};
+export type Statistics = Array<CategoryStatistics>;

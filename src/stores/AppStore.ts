@@ -4,7 +4,7 @@ import { watch } from "@arcgis/core/core/reactiveUtils";
 import * as query from "@arcgis/core/rest/query";
 import Query from "@arcgis/core/rest/support/Query";
 import { categoryKeys, tableURL } from "../data";
-import { Statistics, TimePeriod } from "../interfaces";
+import { CachedStatistic, Statistics, TimePeriod } from "../interfaces";
 
 @subclass("happy-moments.AppStore")
 class AppStore extends Accessor {
@@ -15,8 +15,7 @@ class AppStore extends Accessor {
     this.addHandles([
       watch(
         () => this.timePeriod,
-        (timePeriod) => {
-          console.log(timePeriod);
+        () => {
           this._loadStatistics();
         },
         {
@@ -29,53 +28,62 @@ class AppStore extends Accessor {
   timePeriod: TimePeriod;
 
   @property()
-  statistics: Statistics = {
-    dayPeriod: null,
-    monthPeriod: null
-  };
+  country: string | null = null;
+
+  @property()
+  statistics: Statistics | null = null;
+
+  private _cachedStatistics: Array<CachedStatistic> = [];
 
   toggleTimePeriod(): void {
     this.timePeriod = this.timePeriod === TimePeriod.Day ? TimePeriod.Month : TimePeriod.Day;
   }
 
   private async _loadStatistics() {
-    let queryURL = this.timePeriod === TimePeriod.Day ? tableURL.day : tableURL.month;
+    const cachedStatistic = this._cachedStatistics.find(
+      (element) => element.country === this.country && element.timePeriod === this.timePeriod
+    );
 
-    try {
-      const queryResults = await query.executeQueryJSON(
-        queryURL,
-        new Query({
-          where: "1=1",
-          outStatistics: [
-            {
-              onStatisticField: "hmid",
-              statisticType: "count",
-              outStatisticFieldName: "counts"
-            }
-          ],
-          groupByFieldsForStatistics: ["category"]
-        })
-      );
+    if (cachedStatistic) {
+      this.statistics = cachedStatistic.data;
+    } else {
+      let queryURL = this.timePeriod === TimePeriod.Day ? tableURL.day : tableURL.month;
 
-      const data = queryResults.features.map((feature) => feature.attributes);
-      data.sort((a, b) => b.counts - a.counts);
-      const sum = data.reduce((sum, element) => {
-        return sum + element.counts;
-      }, 0);
-      data.forEach((element) => {
-        element.percentage = Math.floor((element.counts / sum) * 100);
-        element.text = categoryKeys[element.category];
-      });
+      try {
+        const queryResults = await query.executeQueryJSON(
+          queryURL,
+          new Query({
+            where: "1=1",
+            outStatistics: [
+              {
+                onStatisticField: "hmid",
+                statisticType: "count",
+                outStatisticFieldName: "counts"
+              }
+            ],
+            groupByFieldsForStatistics: ["category"]
+          })
+        );
 
-      this.statistics = {
-        ...this.statistics,
-        [this.timePeriod === TimePeriod.Day ? "dayPeriod" : "monthPeriod"]: {
-          updated: true,
+        const data = queryResults.features.map((feature) => feature.attributes);
+        data.sort((a, b) => b.counts - a.counts);
+        const sum = data.reduce((sum, element) => {
+          return sum + element.counts;
+        }, 0);
+        data.forEach((element) => {
+          element.percentage = Math.floor((element.counts / sum) * 100);
+          element.text = categoryKeys[element.category];
+        });
+
+        this.statistics = data;
+        this._cachedStatistics.push({
+          country: this.country,
+          timePeriod: this.timePeriod,
           data
-        }
-      };
-    } catch (error) {
-      console.log(error);
+        });
+      } catch (error) {
+        console.log(error);
+      }
     }
   }
 }

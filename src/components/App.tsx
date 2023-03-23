@@ -38,7 +38,7 @@ class App extends Widget<ConstructProperties> {
           <p>Click on each country below to see what people replied.</p>
         </header>
         <div>
-          <Chart statistics={timePeriod === TimePeriod.Day ? statistics.dayPeriod : statistics.monthPeriod}></Chart>
+          <Chart statistics={statistics}></Chart>
         </div>
       </div>
     );
