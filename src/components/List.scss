@@ -1,0 +1,38 @@
+.list-container {
+  overflow: auto;
+  pointer-events: auto;
+  padding-left: 10px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.8) 80%, rgba(255, 255, 255, 0) 100%);
+  ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    li {
+      border-left-width: 8px;
+      border-left-style: solid;
+      padding: 10px;
+      margin: 10px 0;
+      &.achievement {
+        border-left-color: var(--achievement-color);
+      }
+      &.affection {
+        border-left-color: var(--affection-color);
+      }
+      &.enjoy_the_moment {
+        border-left-color: var(--enjoy-color);
+      }
+      &.bonding {
+        border-left-color: var(--bonding-color);
+      }
+      &.leisure {
+        border-left-color: var(--leisure-color);
+      }
+      &.nature {
+        border-left-color: var(--nature-color);
+      }
+      &.exercise {
+        border-left-color: var(--exercise-color);
+      }
+    }
+  }
+}

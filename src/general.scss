@@ -1,12 +1,15 @@
+.calcite-theme-light,
 :root {
   --main-color: rgba(255 173 51 / 1);
   --achievement-color: #bd7ebe;
-  --affection-color: #ffb55a;
+  --affection-color: #ff7593;
   --nature-color: #6ca676;
-  --bonding-color: #fd7f6f;
+  --bonding-color: #fd976f;
   --exercise-color: #65a9de;
   --enjoy-color: #b2e061;
   --leisure-color: #beb9db;
+  --calcite-ui-brand: var(--main-color);
+  --font-color: rgba(50, 50, 50, 0.8);
 }
 
 html,
@@ -20,6 +23,7 @@ body,
   height: 100%;
   width: 100%;
   font-family: "Avenir Next", "Avenir", "Helvetica Neue", sans-serif;
+  color: var(--font-color);
 }
 
 .background {
@@ -69,9 +73,8 @@ a:hover {
 
   .scroll-down {
     max-width: min(700px, 80%);
-    color: rgba(0, 0, 0, 0.7);
-    font-size: 0.9rem;
-    line-height: 1.7rem;
+    color: var(--font-color);
+    line-height: 1.5rem;
     position: absolute;
     bottom: 30px;
     .down-arrow {
@@ -81,7 +84,7 @@ a:hover {
         height: 100%;
         filter: brightness(0.1);
         opacity: 0.4;
-        animation: 3s infinite alternate moveTopDown;
+        animation: 2s infinite alternate moveTopDown;
       }
     }
   }
@@ -99,6 +102,8 @@ a:hover {
 #ui {
   z-index: 2;
   pointer-events: none;
+  display: flex;
+  flex-direction: column;
 }
 
 #view {
@@ -106,22 +111,42 @@ a:hover {
   background-color: rgba(255 255 255 / 0.5);
 }
 
-.intro-content {
-  width: min(700px, 80%);
-}
-
-#ui {
-  font-size: 0.9rem;
-  p {
-    line-height: 1.7rem;
-  }
-}
-
 button {
   border: none;
   background-color: transparent;
   font-family: "Avenir Next", "Avenir", "Helvetica Neue", sans-serif;
+  color: var(--font-color);
   &:hover {
     cursor: pointer;
   }
+}
+
+.esri-view,
+.esri-view-surface--inset-outline:focus::after {
+  outline: none !important;
+}
+
+/* scrollbar styles */
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  display: none;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 173, 51, 0.4);
+  border: none;
+  border-radius: var(--border-radius);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 173, 51, 0.8);
+}
+
+::selection {
+  background: var(--main-color);
+  color: #fff;
 }

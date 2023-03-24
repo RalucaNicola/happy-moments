@@ -7,6 +7,7 @@ import SceneView from "@arcgis/core/views/SceneView";
 import App from "./components/App";
 import AppStore from "./stores/AppStore";
 import { websceneId } from "./data";
+import Zoom from "@arcgis/core/widgets/Zoom";
 
 setAssetPath(window.document.URL);
 esriConfig.assetsPath = "./assets";
@@ -35,10 +36,20 @@ const view = (window["view"] = new SceneView({
   ui: {
     components: []
   },
+  padding: {
+    top: 150
+  },
   navigation: {
     mouseWheelZoomEnabled: false,
     browserTouchPanEnabled: false
   }
 }));
+
+// add navigation
+const zoom = new Zoom({
+  view: view
+});
+view.ui.add(zoom, "bottom-right");
+
 const store = new AppStore({ view });
 new App({ container: document.getElementById("ui"), store });

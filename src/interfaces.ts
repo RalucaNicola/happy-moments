@@ -8,7 +8,7 @@ export type Country = {
   isoId: string;
 } | null;
 
-enum Category {
+export enum Category {
   achievement,
   affection,
   leisure,
@@ -35,3 +35,12 @@ export type Statistics = {
   country: string;
   data: Array<CategoryStatistics>;
 };
+
+export type HappyMoment = {
+  text: string;
+  category: Category;
+};
+export type HappyMoments = {
+  total: number;
+  data: Array<HappyMoment>;
+} | null;

@@ -1,25 +1,79 @@
 .ui-layout {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  padding: 10px;
+  padding: 0;
   margin: 0;
   height: 100%;
-  width: 100%;
-  box-sizing: border-box;
+  width: min(100%, 500px);
+
   header {
+    box-sizing: border-box;
+    padding: 10px;
     pointer-events: auto;
+    background: rgba(255 255 255 / 0.8);
+    h2 {
+      font-size: 1rem;
+    }
     button {
       padding: 5px 5px 0 5px;
       margin-right: 1px;
       transition: background-color 500ms;
       font-weight: bold;
+      font-size: 1rem;
+      color: rgb(50, 50, 50, 0.6);
       &.focused {
         background-color: var(--main-color);
+        color: var(--font-color);
       }
       &:hover {
         background-color: var(--main-color);
+        color: var(--font-color);
+      }
+      &.remove-filter {
+        font-weight: normal;
+        font-size: 0.9rem;
+        border: 1px solid var(--main-color);
+        padding: 5px;
+        width: 100%;
       }
     }
   }
+
+  .description {
+    line-height: 1.5rem;
+    .underline {
+      border-bottom-width: 4px;
+      border-bottom-style: solid;
+    }
+    .achievement {
+      border-bottom-color: var(--achievement-color);
+    }
+    .affection {
+      border-bottom-color: var(--affection-color);
+    }
+    .enjoy_the_moment {
+      border-bottom-color: var(--enjoy-color);
+    }
+    .bonding {
+      border-bottom-color: var(--bonding-color);
+    }
+    .leisure {
+      border-bottom-color: var(--leisure-color);
+    }
+    .nature {
+      border-bottom-color: var(--nature-color);
+    }
+    .exercise {
+      border-bottom-color: var(--exercise-color);
+    }
+  }
+}
+
+.instruction {
+  color: rgb(50, 50, 50, 0.6);
+  font-size: 0.9rem;
+  padding: 0;
+  margin: 10px 0 0 0;
+}
+.pagination {
+  margin: 0 auto;
+  pointer-events: auto;
 }

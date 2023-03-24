@@ -14,3 +14,5 @@ export const categoryKeys = {
   exercise: "exercise",
   nature: "nature"
 };
+
+export const pageSize = 50;
