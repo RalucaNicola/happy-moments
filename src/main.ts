@@ -8,6 +8,7 @@ import App from "./components/App";
 import AppStore from "./stores/AppStore";
 import { websceneId } from "./data";
 import Zoom from "@arcgis/core/widgets/Zoom";
+import Color from "@arcgis/core/Color";
 
 setAssetPath(window.document.URL);
 esriConfig.assetsPath = "./assets";
@@ -32,6 +33,9 @@ const view = (window["view"] = new SceneView({
     lighting: {
       type: "virtual"
     }
+  },
+  highlightOptions: {
+    color: new Color("rgba(255, 173, 51, 255)")
   },
   ui: {
     components: []

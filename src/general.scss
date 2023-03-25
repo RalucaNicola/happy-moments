@@ -57,7 +57,7 @@ a:hover {
 }
 
 .intro {
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.5) 100%);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.8) 100%);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -108,7 +108,7 @@ a:hover {
 
 #view {
   z-index: 1;
-  background-color: rgba(255 255 255 / 0.5);
+  background-color: rgba(255 255 255 / 0.8);
 }
 
 button {

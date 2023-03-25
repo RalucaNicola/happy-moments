@@ -1,10 +1,14 @@
 import Accessor from "@arcgis/core/core/Accessor";
 import { property, subclass } from "@arcgis/core/core/accessorSupport/decorators";
 import { watch } from "@arcgis/core/core/reactiveUtils";
+import Graphic from "@arcgis/core/Graphic";
 import FeatureLayer from "@arcgis/core/layers/FeatureLayer";
+import TileLayer from "@arcgis/core/layers/TileLayer";
 import * as query from "@arcgis/core/rest/query";
 import Query from "@arcgis/core/rest/support/Query";
+import FeatureLayerView from "@arcgis/core/views/layers/FeatureLayerView";
 import SceneView from "@arcgis/core/views/SceneView";
+import View from "@arcgis/core/views/View";
 import { categoryKeys, pageSize, tableURL } from "../data";
 import { CachedStatistic, Category, Country, HappyMoments, Statistics, TimePeriod } from "../interfaces";
 
@@ -36,17 +40,56 @@ class AppStore extends Accessor {
           } else {
             this.happyMoments = null;
             this.pagination = 0;
+            this.selectionHighlight?.remove();
           }
         }
       )
     ]);
 
     view.when(() => {
-      const layer = this._view.map.findLayerById("187000ea9b6-layer-99") as FeatureLayer;
-      layer.outFields = ["iso_a3", "Name"];
-      this.addHandles([this._setupClickHitTest(layer)]);
+      const selectionLayer = this._view.map.findLayerById("18718b1e65f-layer-91") as FeatureLayer;
+      selectionLayer.outFields = ["iso_a3", "Name"];
+      view.whenLayerView(selectionLayer).then((lyrView) => {
+        this.selectionLayerView = lyrView;
+      });
+      const tileLayer3m = this._view.map.findLayerById("18718a5f1c6-layer-89") as TileLayer;
+      const tileLayer24h = this._view.map.findLayerById("18718ba9b7f-layer-97") as TileLayer;
+      this.addHandles([
+        this._setupClickHitTest(selectionLayer),
+        this._setupHoverHitTest(selectionLayer),
+        watch(
+          () => [this.timePeriod],
+          () => {
+            if (this.timePeriod === TimePeriod.Day) {
+              tileLayer3m.visible = false;
+              tileLayer24h.visible = true;
+              selectionLayer.definitionExpression = "happy_moments_count_24h > 0";
+            } else {
+              tileLayer3m.visible = true;
+              tileLayer24h.visible = false;
+              selectionLayer.definitionExpression = "happy_moments_3m_count > 0";
+            }
+          },
+          {
+            initial: true
+          }
+        )
+      ]);
     });
   }
+
+  @property()
+  selectionLayerView: FeatureLayerView = null;
+
+  @property()
+  selectionHighlight: IHandle;
+
+  @property()
+  mouseOverHighlight: IHandle;
+
+  @property()
+  mouseOverGraphic: Graphic = null;
+
   @property()
   timePeriod: TimePeriod;
 
@@ -137,6 +180,33 @@ class AppStore extends Accessor {
     }
   }
 
+  private _setupHoverHitTest(layer: FeatureLayer): IHandle {
+    return this._view.on("pointer-move", (event) => {
+      this._view.hitTest(event, { include: layer }).then((response) => {
+        if (response.results.length) {
+          this._view.container.style.cursor = "pointer";
+          const result = response.results[0];
+          if (result?.type === "graphic") {
+            if (this.mouseOverGraphic) {
+              if (this.mouseOverGraphic.attributes.OBJECTID !== result.graphic.attributes.OBJECTID) {
+                this.mouseOverHighlight?.remove();
+                this.mouseOverHighlight = this.selectionLayerView.highlight(result.graphic);
+                this.mouseOverGraphic = result.graphic;
+              }
+            } else {
+              this.mouseOverHighlight = this.selectionLayerView.highlight(result.graphic);
+              this.mouseOverGraphic = result.graphic;
+            }
+          }
+        } else {
+          this._view.container.style.cursor = "revert";
+          this.mouseOverHighlight?.remove();
+          this.mouseOverGraphic = null;
+        }
+      });
+    });
+  }
+
   private _setupClickHitTest(layer: FeatureLayer): IHandle {
     return this._view.on("click", (event) => {
       this._view.hitTest(event, { include: layer }).then((response) => {
@@ -148,6 +218,9 @@ class AppStore extends Accessor {
               isoId: iso_a3,
               name: Name
             };
+            this.selectionHighlight?.remove();
+            this.selectionHighlight = this.selectionLayerView.highlight(result.graphic);
+            this._view.goTo(result.graphic);
           }
         }
       });
