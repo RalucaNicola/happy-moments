@@ -1,7 +1,9 @@
 # What makes us happy?
 
+In 2017 Mechanical Turk users shared [100,000 happy moments](https://megagon.ai/happydb-a-happiness-database-of-100000-happy-moments/) for a research project that tried to classify and understand what makes people happy in their daily lives. This application visualizes these moments on a globe. You can also read about how to make such a map in [this blog post](https://community.esri.com/t5/applications-prototype-lab-blog/create-an-interactive-watercolor-globe/ba-p/1272046).
 
-Based on [Arno's template](https://github.com/arnofiva/arcgis-core-template). 
+
+The web application is based on [Arno Fiva's template](https://github.com/arnofiva/arcgis-core-template). 
 
 ## Prerequisites
 
