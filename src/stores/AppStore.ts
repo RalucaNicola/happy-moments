@@ -56,7 +56,7 @@ class AppStore extends Accessor {
       const tileLayer24h = this._view.map.findLayerById("18718ba9b7f-layer-97") as TileLayer;
       this.addHandles([
         this._setupClickHitTest(selectionLayer),
-        this._setupHoverHitTest(selectionLayer),
+
         watch(
           () => [this.timePeriod],
           () => {
@@ -75,6 +75,10 @@ class AppStore extends Accessor {
           }
         )
       ]);
+
+      if (matchMedia("(pointer:fine)").matches) {
+        this.addHandles([this._setupHoverHitTest(selectionLayer)]);
+      }
     });
   }
 

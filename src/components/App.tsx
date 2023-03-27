@@ -59,18 +59,26 @@ class App extends Widget<ConstructProperties> {
   }
 
   private _renderDescription(statistics: Statistics): tsx.JSX.Element {
-    const country = statistics.country;
+    const { country } = statistics;
+    const total = statistics.data.reduce((total, data) => total + data.counts, 0);
     return (
       <div class="description">
-        <p>
-          {this._getIntroPhrase(country)}
-          {statistics.data.map((element, index) => (
-            <span key={index}>
-              <span class={this.classes(element.category, "underline")}>{element.text}</span> (
-              {formatNumber(element.counts)}){this._setPunctuation(index, statistics.data.length)}
-            </span>
-          ))}
-        </p>
+        {total > 0 ? (
+          <p>
+            {this._getIntroPhrase(country)}
+            {statistics.data.map((element, index) => (
+              <span key={index}>
+                <span class={this.classes(element.category, "underline")}>{element.text}</span> (
+                {formatNumber(element.counts)}){this._setPunctuation(index, statistics.data.length)}
+              </span>
+            ))}
+          </p>
+        ) : (
+          <p>
+            No happy moments found for <b class="country">{country}</b> for this period.
+          </p>
+        )}
+
         {country ? (
           ""
         ) : (
@@ -84,7 +92,7 @@ class App extends Widget<ConstructProperties> {
     if (country) {
       return (
         <span>
-          In <b> {country}</b> happy moments are related to{" "}
+          In <b class="country">{country}</b> happy moments are related to{" "}
         </span>
       );
     } else {

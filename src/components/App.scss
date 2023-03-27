@@ -64,6 +64,9 @@
     .exercise {
       border-bottom-color: var(--exercise-color);
     }
+    .country {
+      border-bottom: 5px solid var(--main-color);
+    }
   }
 }
 

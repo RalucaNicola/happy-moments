@@ -44,16 +44,31 @@ const view = (window["view"] = new SceneView({
     top: 150
   },
   navigation: {
-    mouseWheelZoomEnabled: false,
-    browserTouchPanEnabled: false
+    mouseWheelZoomEnabled: false
   }
 }));
 
-// add navigation
-const zoom = new Zoom({
-  view: view
-});
-view.ui.add(zoom, "bottom-right");
+// add navigation only on mouse enabled devices
+if (matchMedia("(pointer:fine)").matches) {
+  const zoom = new Zoom({
+    view: view
+  });
+  view.ui.add(zoom, "bottom-right");
+}
+
+window.onresize = (event) => {
+  setPadding();
+};
+setPadding();
+
+function setPadding(): void {
+  const width = window.innerWidth;
+  if (width < 500) {
+    view.padding = { top: 150, left: 0 };
+  } else {
+    view.padding = { top: 150, left: Math.min(width - 500, 500) };
+  }
+}
 
 const store = new AppStore({ view });
 new App({ container: document.getElementById("ui"), store });
